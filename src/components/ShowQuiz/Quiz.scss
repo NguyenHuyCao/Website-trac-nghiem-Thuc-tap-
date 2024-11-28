@@ -1,0 +1,23 @@
+.container {
+  margin-top: 40px;
+
+  .detail-quiz {
+    .question-quiz {
+      margin-top: 60px;
+      font-size: 30px;
+    }
+
+    .answers-quiz {
+      margin-top: 20px;
+      margin-left: 15px;
+
+      .answer-quiz {
+        font-size: 15px;
+      }
+    }
+
+    .paginate-quiz {
+      margin-top: 15px;
+    }
+  }
+}
