@@ -1,0 +1,50 @@
+// Biến màu sắc
+$background-color: #f8f9fa;
+$text-color: #333;
+$hover-color: #007bff;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+.header {
+  background-color: $background-color;
+  padding: 10px 20px;
+  box-shadow: $box-shadow;
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+
+      .nav-item {
+        font-size: 18px;
+
+        .nav-link {
+          text-decoration: none;
+          color: $text-color;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: $hover-color;
+          }
+
+          .nav-icon {
+            font-size: 20px;
+          }
+        }
+
+        .active {
+          color: $hover-color;
+        }
+      }
+    }
+  }
+}

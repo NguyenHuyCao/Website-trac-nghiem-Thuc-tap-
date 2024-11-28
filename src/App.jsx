@@ -1,20 +1,15 @@
-import { Breadcrumb } from "antd";
+import { Outlet } from "react-router-dom";
+import Header from "./components/Header";
+import "./App.scss";
 
 const App = () => (
   <>
-    <Breadcrumb
-      items={[
-        {
-          title: "Trang chủ",
-        },
-        {
-          title: <a href="">Cập nhật câu hỏi</a>,
-        },
-        {
-          title: <a href="">Application List</a>,
-        },
-      ]}
-    />
+    <div className="header">
+      <Header />
+    </div>
+    <div className="container">
+      <Outlet />
+    </div>
   </>
 );
 
