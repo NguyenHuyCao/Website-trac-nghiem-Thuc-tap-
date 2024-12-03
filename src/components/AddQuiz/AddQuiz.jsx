@@ -2,6 +2,8 @@ import { Button, Flex, Input, Select } from "antd";
 import { IoMdAdd } from "react-icons/io";
 import "./AddQuiz.scss";
 import { useState } from "react";
+// import { postCreateNewQuiz } from "../../services/apiServices";
+import axios from "axios";
 
 const AddQuiz = () => {
   const [quiz, setQuiz] = useState({
@@ -53,9 +55,8 @@ const AddQuiz = () => {
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Quiz Submitted:", quiz);
-    // alert("Bài thi đã được thêm thành công!");
     if (!quiz.title) {
       setError("Yêu cầu nhập tiêu đề bài thi");
       return;
@@ -80,6 +81,33 @@ const AddQuiz = () => {
       setError("Yêu cầu tạo câu hỏi cho bài thi");
       return;
     }
+
+    await axios.post(
+      "https://quizzlet-19y7.onrender.com/api/v1/quizz/add",
+      {
+        title: quiz.title,
+        description: quiz.description,
+        questions: quiz.questions,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+
+    // const formData = new FormData();
+    // formData.append("title", quiz.title);
+    // formData.append("description", quiz.description);
+    // formData.append("questions", JSON.stringify(quiz.questions));
+
+    // await axios
+    //   .post("https://quizzlet-19y7.onrender.com/api/v1/quizz/add", formData, {
+    //     headers: { "Content-Type": "multipart/form-data" },
+    //     withCredentials: true,
+    //   })
+    //   .then((response) => console.log(response.data))
+    //   .catch((error) => console.error(error.response?.data || error.message));
+    // // await postCreateNewQuiz(quiz.title, quiz.description, quiz.questions);
   };
 
   console.log(error);

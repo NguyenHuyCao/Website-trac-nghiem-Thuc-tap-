@@ -93,7 +93,7 @@ const ShowQuiz = () => {
   ];
 
   return (
-    <Row gutter={16} style={{ marginTop: "50px" }}>
+    <Row gutter={16} style={{ marginTop: "100px" }}>
       {quizzes &&
         quizzes.map((quiz, index) => {
           return (
