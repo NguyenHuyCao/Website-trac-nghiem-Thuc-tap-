@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Checkbox, Pagination, Button, Modal } from "antd";
+import { Checkbox, Pagination, Button, Modal, Progress } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDataQuiz } from "../../../services/apiServices";
@@ -14,12 +14,14 @@ const Quiz = () => {
   const [markedQuestions, setMarkedQuestions] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false); // Modal xác nhận
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const [quizResult, setQuizResult] = useState({
     correctCount: 0,
     incorrectCount: 0,
     score: 0,
   });
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes = 600 seconds
+  const [progress, setProgress] = useState(100); // Progress based on time
 
   useEffect(() => {
     const fetchDataQuiz = async () => {
@@ -27,7 +29,42 @@ const Quiz = () => {
       setQuiz(data.questions || []);
     };
     fetchDataQuiz();
+
+    // Khôi phục bài làm từ LocalStorage
+    const savedAnswers = localStorage.getItem("userAnswers");
+    if (savedAnswers) {
+      setUserAnswers(JSON.parse(savedAnswers));
+    }
   }, [id]);
+
+  useEffect(() => {
+    // Cập nhật tiến trình thời gian
+    const interval = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(interval);
+          handleSubmitQuiz();
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    // Cập nhật thanh tiến trình dựa trên thời gian còn lại
+    setProgress(Math.round((timeLeft / 600) * 100)); // 600 là tổng thời gian ban đầu (10 phút)
+  }, [timeLeft]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   const handlePaginationChange = (page) => {
     setCurrentIndex(page - 1);
@@ -45,17 +82,17 @@ const Quiz = () => {
   };
 
   const handleSubmitQuiz = () => {
+    if (isSubmitted) return;
+
     const unansweredQuestions = quiz.filter(
       (_, index) => userAnswers[index] === undefined
     );
 
-    // Nếu chưa trả lời hết câu hỏi, hiển thị modal xác nhận
     if (unansweredQuestions.length > 0) {
       setIsConfirmModalVisible(true);
       return;
     }
 
-    // Nếu đã trả lời hết, tính kết quả
     calculateResults();
   };
 
@@ -75,6 +112,9 @@ const Quiz = () => {
     setQuizResult({ correctCount, incorrectCount, score });
     setIsModalVisible(true);
     setIsSubmitted(true);
+
+    // Xóa trạng thái bài làm khi đã nộp
+    localStorage.removeItem("userAnswers");
   };
 
   const handleConfirmSubmit = () => {
@@ -89,10 +129,6 @@ const Quiz = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
     navigate("/");
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
   };
 
   const handleMarkQuestion = (index) => {
@@ -135,6 +171,10 @@ const Quiz = () => {
       </div>
 
       <div className="detail-quiz">
+        <div className="progress-bar">
+          <Progress percent={progress} />
+        </div>
+
         <div className="question-quiz">
           <h2>
             Câu hỏi {currentIndex + 1}: {quiz[currentIndex]?.question}
@@ -142,55 +182,42 @@ const Quiz = () => {
         </div>
 
         <div className="answers-quiz">
-          {quiz[currentIndex]?.answers.map((answer, index) => {
-            const isCorrect =
-              userAnswers[currentIndex] === index &&
-              userAnswers[currentIndex] === quiz[currentIndex].correctAnswer;
-            const isIncorrect =
-              userAnswers[currentIndex] === index &&
-              userAnswers[currentIndex] !== quiz[currentIndex].correctAnswer;
-            const isCorrectAnswer =
-              quiz[currentIndex].correctAnswer === index && isSubmitted;
-
-            return (
-              <div key={index}>
-                <Checkbox
-                  checked={userAnswers[currentIndex] === index}
-                  onChange={() => handleSelectAnswer(currentIndex, index)}
-                  disabled={isSubmitted}
-                >
-                  <p
-                    className={`answer-quiz ${
-                      isCorrect && isSubmitted ? "correct-answer" : ""
-                    } ${isIncorrect && isSubmitted ? "incorrect-answer" : ""}
-            ${isCorrectAnswer && !isCorrect ? "correct-highlight" : ""}`}
-                  >
-                    {answer}{" "}
-                    {isCorrect && isSubmitted && (
-                      <span className="check-icon">✔️</span>
-                    )}
-                    {isIncorrect && isSubmitted && (
-                      <span className="check-icon">❌</span>
-                    )}
-                    {isCorrectAnswer && !isCorrect && (
-                      <span className="correct-text">(Đáp án đúng)</span>
-                    )}
-                  </p>
-                </Checkbox>
-              </div>
-            );
-          })}
+          {quiz[currentIndex]?.answers.map((answer, index) => (
+            <div
+              key={index}
+              className={`answer ${
+                isSubmitted &&
+                userAnswers[currentIndex] === index &&
+                index === quiz[currentIndex]?.correctAnswer
+                  ? "correct"
+                  : ""
+              } ${
+                isSubmitted &&
+                userAnswers[currentIndex] === index &&
+                index !== quiz[currentIndex]?.correctAnswer
+                  ? "incorrect"
+                  : ""
+              }`}
+            >
+              <Checkbox
+                checked={userAnswers[currentIndex] === index}
+                onChange={() => handleSelectAnswer(currentIndex, index)}
+                disabled={isSubmitted}
+              >
+                {answer}
+              </Checkbox>
+            </div>
+          ))}
         </div>
 
         <Button
           disabled={isSubmitted}
-          color="default"
-          variant="filled"
           onClick={() => handleMarkQuestion(currentIndex)}
           className="marked-button"
         >
           {markedQuestions.includes(currentIndex) ? "Bỏ đánh dấu" : "Đánh dấu"}
         </Button>
+
         <div className="paginate-quiz">
           <Pagination
             current={currentIndex + 1}
@@ -202,6 +229,7 @@ const Quiz = () => {
       </div>
 
       <div className="submit-quiz">
+        <span className="timer">{formatTime(timeLeft)}</span>
         <Button
           type="primary"
           onClick={handleSubmitQuiz}
@@ -211,13 +239,11 @@ const Quiz = () => {
         </Button>
       </div>
 
-      {/* Modal hiển thị kết quả */}
       <Modal
         title="Kết quả bài thi"
         open={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Xem lại"
+        onOk={handleCancel}
+        cancelButtonProps={{ style: { display: "none" } }}
       >
         <p>
           Số câu đúng: {quizResult.correctCount} <br />
@@ -226,14 +252,11 @@ const Quiz = () => {
         </p>
       </Modal>
 
-      {/* Modal xác nhận nộp bài */}
       <Modal
         title="Xác nhận nộp bài"
         open={isConfirmModalVisible}
         onOk={handleConfirmSubmit}
         onCancel={handleCancelSubmit}
-        okText="Tiếp tục nộp"
-        cancelText="Quay lại"
       >
         <p>Bạn vẫn còn câu hỏi chưa trả lời. Bạn có chắc chắn muốn nộp bài?</p>
       </Modal>
