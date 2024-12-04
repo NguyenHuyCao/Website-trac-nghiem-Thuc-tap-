@@ -145,4 +145,53 @@
       }
     }
   }
+
+  // Phần thời gian và nút nộp bài
+  .submit-quiz {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .timer {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      margin-top: auto;
+    }
+
+    .exit-button {
+      background-color: rgb(163, 7, 7);
+      border: none;
+      color: #fff;
+      &:hover {
+        background-color: rgb(110, 7, 7);
+      }
+      &:active {
+        background-color: rgb(99, 6, 6);
+      }
+    }
+
+    .ant-btn-primary {
+      background-color: #4caf50;
+      border-color: #4caf50;
+      &:hover {
+        background-color: #45a049;
+      }
+      &:active {
+        background-color: #388e3c;
+      }
+    }
+
+    .ant-progress {
+      margin-bottom: 20px;
+    }
+  }
 }
