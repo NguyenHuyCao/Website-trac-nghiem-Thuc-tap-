@@ -5,6 +5,7 @@ import Home from "./components/Home/Home";
 import ShowQuiz from "./components/Quizzes/Quizzes.jsx";
 import Quiz from "./components/Quizzes/ShowQuiz/Quiz.jsx";
 import ToDoQuiz from "./components/Quizzes/ToDoQuiz/ToDoQuiz.jsx";
+import HomeQuiz from "./components/Quizzes/ToDoQuiz/HomeQuiz.jsx";
 
 const Layout = () => {
   return (
@@ -15,7 +16,8 @@ const Layout = () => {
         <Route path="show-quiz/:id" element={<Quiz />} />
         <Route path="add-quiz" element={<AddQuiz />} />
       </Route>
-      <Route path="exam/:id" element={<ToDoQuiz />} />
+      <Route path="home-exam/:id" element={<HomeQuiz />} />
+      <Route path="home-exam/:id/exam" element={<ToDoQuiz />} />
     </Routes>
   );
 };

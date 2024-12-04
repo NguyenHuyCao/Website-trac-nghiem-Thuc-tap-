@@ -1,0 +1,43 @@
+.home-quiz-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  background-color: #f5f5f5;
+
+  .quiz-button {
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s; // Thêm hiệu ứng cho màu nền và transform
+
+    &:hover {
+      transform: translateY(-3px); // Di chuyển nhẹ lên khi hover
+    }
+  }
+
+  .start-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: #45a049; // Đổi màu nền khi hover
+    }
+  }
+
+  .back-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: #e53935; // Đổi màu nền khi hover
+    }
+  }
+}

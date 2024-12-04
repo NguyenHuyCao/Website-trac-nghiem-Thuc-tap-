@@ -10,7 +10,7 @@ const Quiz = () => {
   const [quiz, setQuiz] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
-  const [isModalVisible, setIsModalVisible] = useState(false); // Modal result state
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [markedQuestions, setMarkedQuestions] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
@@ -19,9 +19,9 @@ const Quiz = () => {
     incorrectCount: 0,
     score: 0,
   });
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes = 600 seconds
-  const [progress, setProgress] = useState(100); // Progress based on time
-  const [isTimeRunning, setIsTimeRunning] = useState(true); // Track whether time is still running
+  const [timeLeft, setTimeLeft] = useState(600);
+  const [progress, setProgress] = useState(100);
+  const [isTimeRunning, setIsTimeRunning] = useState(true);
 
   useEffect(() => {
     const fetchDataQuiz = async () => {
@@ -142,148 +142,152 @@ const Quiz = () => {
   };
 
   return (
-    <div className="container-quiz">
-      <div className="table-questions">
-        <h1>Bản câu hỏi</h1>
-        <div className="number-questions">
-          {quiz.map((q, index) => {
-            const isAnswered = userAnswers[index] !== undefined;
-            const isCorrect =
-              isAnswered && userAnswers[index] === q.correctAnswer;
+    <>
+      <div className="container-quiz">
+        <div className="table-questions">
+          <h1>Bản câu hỏi</h1>
+          <div className="number-questions">
+            {quiz.map((q, index) => {
+              const isAnswered = userAnswers[index] !== undefined;
+              const isCorrect =
+                isAnswered && userAnswers[index] === q.correctAnswer;
 
-            return (
-              <div
-                key={q._id}
-                className={`question-item ${
-                  currentIndex === index ? "active" : ""
-                } ${isAnswered ? "answered" : ""} ${
-                  isSubmitted ? (isCorrect ? "correct" : "incorrect") : ""
-                } ${
-                  !isSubmitted && markedQuestions.includes(index)
-                    ? "marked"
-                    : ""
-                }`}
-                onClick={() => handleQuestionClick(index)}
-              >
-                {index + 1}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="detail-quiz">
-        <div className="progress-bar">
-          <Progress percent={progress} />
-        </div>
-
-        <div className="question-quiz">
-          <h2>
-            Câu hỏi {currentIndex + 1}: {quiz[currentIndex]?.question}
-          </h2>
-        </div>
-
-        <div className="answers-quiz">
-          {quiz[currentIndex]?.answers.map((answer, index) => {
-            const isCorrect =
-              userAnswers[currentIndex] === index &&
-              userAnswers[currentIndex] === quiz[currentIndex].correctAnswer;
-            const isIncorrect =
-              userAnswers[currentIndex] === index &&
-              userAnswers[currentIndex] !== quiz[currentIndex].correctAnswer;
-            const isCorrectAnswer =
-              quiz[currentIndex].correctAnswer === index && isSubmitted;
-
-            return (
-              <div key={index}>
-                <Checkbox
-                  checked={userAnswers[currentIndex] === index}
-                  onChange={() => handleSelectAnswer(currentIndex, index)}
-                  disabled={isSubmitted}
+              return (
+                <div
+                  key={q._id}
+                  className={`question-item ${
+                    currentIndex === index ? "active" : ""
+                  } ${isAnswered ? "answered" : ""} ${
+                    isSubmitted ? (isCorrect ? "correct" : "incorrect") : ""
+                  } ${
+                    !isSubmitted && markedQuestions.includes(index)
+                      ? "marked"
+                      : ""
+                  }`}
+                  onClick={() => handleQuestionClick(index)}
                 >
-                  <p
-                    className={`answer-quiz ${
-                      isCorrect && isSubmitted ? "correct-answer" : ""
-                    } ${isIncorrect && isSubmitted ? "incorrect-answer" : ""}
-            ${isCorrectAnswer && !isCorrect ? "correct-highlight" : ""}`}
+                  {index + 1}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="detail-quiz">
+          <div className="progress-bar">
+            <Progress percent={progress} />
+          </div>
+
+          <div className="question-quiz">
+            <h2>
+              Câu hỏi {currentIndex + 1}: {quiz[currentIndex]?.question}
+            </h2>
+          </div>
+
+          <div className="answers-quiz">
+            {quiz[currentIndex]?.answers.map((answer, index) => {
+              const isCorrect =
+                userAnswers[currentIndex] === index &&
+                userAnswers[currentIndex] === quiz[currentIndex].correctAnswer;
+              const isIncorrect =
+                userAnswers[currentIndex] === index &&
+                userAnswers[currentIndex] !== quiz[currentIndex].correctAnswer;
+              const isCorrectAnswer =
+                quiz[currentIndex].correctAnswer === index && isSubmitted;
+
+              return (
+                <div key={index}>
+                  <Checkbox
+                    checked={userAnswers[currentIndex] === index}
+                    onChange={() => handleSelectAnswer(currentIndex, index)}
+                    disabled={isSubmitted}
                   >
-                    {answer}{" "}
-                    {isCorrect && isSubmitted && (
-                      <span className="check-icon">✔️</span>
-                    )}
-                    {isIncorrect && isSubmitted && (
-                      <span className="check-icon">❌</span>
-                    )}
-                    {isCorrectAnswer && !isCorrect && (
-                      <span className="correct-text">(Đáp án đúng)</span>
-                    )}
-                  </p>
-                </Checkbox>
-              </div>
-            );
-          })}
-        </div>
+                    <p
+                      className={`answer-quiz ${
+                        isCorrect && isSubmitted ? "correct-answer" : ""
+                      } ${isIncorrect && isSubmitted ? "incorrect-answer" : ""}
+              ${isCorrectAnswer && !isCorrect ? "correct-highlight" : ""}`}
+                    >
+                      {answer}{" "}
+                      {isCorrect && isSubmitted && (
+                        <span className="check-icon">✔️</span>
+                      )}
+                      {isIncorrect && isSubmitted && (
+                        <span className="check-icon">❌</span>
+                      )}
+                      {isCorrectAnswer && !isCorrect && (
+                        <span className="correct-text">(Đáp án đúng)</span>
+                      )}
+                    </p>
+                  </Checkbox>
+                </div>
+              );
+            })}
+          </div>
 
-        <Button
-          disabled={isSubmitted}
-          onClick={() => handleMarkQuestion(currentIndex)}
-          className="marked-button"
-        >
-          {markedQuestions.includes(currentIndex) ? "Bỏ đánh dấu" : "Đánh dấu"}
-        </Button>
-
-        <div className="paginate-quiz">
-          <Pagination
-            current={currentIndex + 1}
-            total={quiz.length * 10}
-            onChange={handlePaginationChange}
-            showSizeChanger={false}
-          />
-        </div>
-      </div>
-
-      <div className="submit-quiz">
-        <span className="timer">{formatTime(timeLeft)}</span>
-        {!isSubmitted ? (
           <Button
-            type="primary"
-            onClick={handleSubmitQuiz}
             disabled={isSubmitted}
+            onClick={() => handleMarkQuestion(currentIndex)}
+            className="marked-button"
           >
-            Nộp bài
+            {markedQuestions.includes(currentIndex)
+              ? "Bỏ đánh dấu"
+              : "Đánh dấu"}
           </Button>
-        ) : (
-          <Button className="exit-button" onClick={() => navigate("/")}>
-            Thoát
-          </Button>
-        )}
-      </div>
 
-      {/* Modal for quiz result */}
-      <Modal
-        title="Kết quả bài thi"
-        open={isModalVisible}
-        onOk={handleOk}
-        okText="Xem lại"
-        onCancel={handleCancel}
-      >
-        <div>
-          <p>Số câu đúng: {quizResult.correctCount}</p>
-          <p>Số câu sai: {quizResult.incorrectCount}</p>
-          <p>Điểm số: {quizResult.score} điểm</p>
+          <div className="paginate-quiz">
+            <Pagination
+              current={currentIndex + 1}
+              total={quiz.length * 10}
+              onChange={handlePaginationChange}
+              showSizeChanger={false}
+            />
+          </div>
         </div>
-      </Modal>
 
-      {/* Modal for confirmation when quiz is incomplete */}
-      <Modal
-        title="Xác nhận"
-        open={isConfirmModalVisible}
-        onOk={calculateResults}
-        onCancel={() => setIsConfirmModalVisible(false)}
-      >
-        <p>Bạn chưa trả lời hết tất cả câu hỏi, bạn có muốn nộp bài không?</p>
-      </Modal>
-    </div>
+        <div className="submit-quiz">
+          <span className="timer">{formatTime(timeLeft)}</span>
+          {!isSubmitted ? (
+            <Button
+              type="primary"
+              onClick={handleSubmitQuiz}
+              disabled={isSubmitted}
+            >
+              Nộp bài
+            </Button>
+          ) : (
+            <Button className="exit-button" onClick={() => navigate("/")}>
+              Thoát
+            </Button>
+          )}
+        </div>
+
+        {/* Modal for quiz result */}
+        <Modal
+          title="Kết quả bài thi"
+          open={isModalVisible}
+          onOk={handleOk}
+          okText="Xem lại"
+          onCancel={handleCancel}
+        >
+          <div>
+            <p>Số câu đúng: {quizResult.correctCount}</p>
+            <p>Số câu sai: {quizResult.incorrectCount}</p>
+            <p>Điểm số: {quizResult.score} điểm</p>
+          </div>
+        </Modal>
+
+        {/* Modal for confirmation when quiz is incomplete */}
+        <Modal
+          title="Xác nhận"
+          open={isConfirmModalVisible}
+          onOk={calculateResults}
+          onCancel={() => setIsConfirmModalVisible(false)}
+        >
+          <p>Bạn chưa trả lời hết tất cả câu hỏi, bạn có muốn nộp bài không?</p>
+        </Modal>
+      </div>
+    </>
   );
 };
 

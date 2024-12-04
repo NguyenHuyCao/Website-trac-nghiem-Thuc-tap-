@@ -45,7 +45,7 @@ const Home = () => {
     setTimeout(() => {
       setIsLoading(false);
       message.success(`Tìm kiếm thành công với ID: ${value}`);
-      navigate(`/exam/${value}`);
+      navigate(`/home-exam/${value}`);
     }, 3000);
   };
 

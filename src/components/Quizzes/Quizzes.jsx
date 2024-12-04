@@ -39,7 +39,7 @@ const ShowQuiz = () => {
               <Button
                 type="primary"
                 // danger
-                onClick={() => navigate(`/exam/${quiz._id}`)}
+                onClick={() => navigate(`/home-exam/${quiz._id}`)}
               >
                 Làm bài
               </Button>
