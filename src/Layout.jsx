@@ -2,8 +2,8 @@ import { Routes, Route } from "react-router";
 import App from "./App";
 import AddQuiz from "./components/AddQuiz/AddQuiz";
 import Home from "./components/Home/Home";
-import ShowQuiz from "./components/ShowQuiz/ShowQuizzes";
-import Quiz from "./components/ShowQuiz/Quiz";
+import ShowQuiz from "./components/ShowQuiz/ShowQuizzes.jsx";
+import Quiz from "./components/ShowQuiz/Quiz.jsx";
 
 const Layout = () => {
   return (

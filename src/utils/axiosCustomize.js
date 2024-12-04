@@ -31,10 +31,10 @@ instance.interceptors.response.use(
   (response) => {
     Nprogress.done();
     // Kiểm tra nếu response chứa `message` hoặc `quiz`
-    if (response.data?.message) {
-      console.log(response.data.message); // Log thông báo để xác nhận
-    }
-    console.log(response.data);
+    // if (response.data?.message) {
+    //   console.log(response.data.message); // Log thông báo để xác nhận
+    // }
+    // console.log(response.data);
 
     return response.data || response; // Trả về dữ liệu đầy đủ
   },

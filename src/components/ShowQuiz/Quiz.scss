@@ -1,23 +1,77 @@
 .container-quiz {
-  margin-top: 100px;
+  // margin-top: 100px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
 
   .detail-quiz {
+    flex: 3;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+
     .question-quiz {
-      margin-top: 60px;
-      font-size: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
     }
 
     .answers-quiz {
-      margin-top: 20px;
-      margin-left: 15px;
+      margin-bottom: 20px;
 
       .answer-quiz {
-        font-size: 15px;
+        font-size: 16px;
+        margin-left: 8px;
       }
     }
 
     .paginate-quiz {
-      margin-top: 15px;
+      text-align: center;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .table-questions {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+
+    h1 {
+      // font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .number-questions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      div {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        font-weight: bold;
+
+        &.active {
+          background-color: #1890ff;
+          color: #fff;
+        }
+
+        &:hover {
+          background-color: #e6f7ff;
+        }
+      }
     }
   }
 }

@@ -1,0 +1,32 @@
+// Tổng quan bố cục
+.show-quiz {
+  margin-top: 100px;
+
+  .quiz-card {
+    margin-top: 20px;
+    cursor: pointer;
+    // transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    // &:hover {
+    //   // transform: scale(1.05);
+    //   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    // }
+  }
+
+  .ant-card {
+    border-radius: 12px;
+    background-color: #f9f9f9;
+
+    .ant-card-head {
+      text-align: center;
+      font-weight: bold;
+      background-color: #eaf4fc;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .ant-card-body {
+      font-size: 16px;
+      color: #555;
+    }
+  }
+}
