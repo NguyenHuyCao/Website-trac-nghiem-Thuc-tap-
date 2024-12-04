@@ -2,7 +2,7 @@ import "./Header.scss";
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { BsPersonWorkspace } from "react-icons/bs";
+// import { BsPersonWorkspace } from "react-icons/bs";
 import { RiSlideshowView } from "react-icons/ri";
 import { useState } from "react";
 
@@ -28,7 +28,7 @@ const Header = () => {
               className={`nav-link ${currentPage === 1 && `active`}`}
             >
               <RiSlideshowView className="nav-icon" />
-              Xem bài thi
+              Bài thi
             </Link>
           </li>
           <li className="nav-item" onClick={() => setCurrentPage(2)}>
@@ -41,7 +41,7 @@ const Header = () => {
             </Link>
           </li>
 
-          <li className="nav-item" onClick={() => setCurrentPage(3)}>
+          {/* <li className="nav-item" onClick={() => setCurrentPage(3)}>
             <Link
               to="/exam"
               className={`nav-link ${currentPage === 3 && `active`}`}
@@ -49,7 +49,7 @@ const Header = () => {
               <BsPersonWorkspace className="nav-icon" />
               Làm bài
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </header>

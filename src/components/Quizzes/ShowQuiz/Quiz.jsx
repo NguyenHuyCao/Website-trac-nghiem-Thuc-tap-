@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import "./Quiz.scss";
 import { Checkbox, Pagination } from "antd";
 import { useEffect, useState } from "react";
-import { getDataQuiz } from "../../services/apiServices";
+import { getDataQuiz } from "../../../services/apiServices";
 
 const Quiz = () => {
   const { id } = useParams();

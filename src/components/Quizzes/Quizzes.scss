@@ -1,0 +1,134 @@
+// Tổng quan bố cục
+.show-quiz {
+  // margin-top: 100px;
+
+  .quiz-card {
+    .card {
+      margin-top: 5px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      background-color: #fff;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .ant-card-head {
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #d9d9d9;
+        font-weight: bold;
+        text-align: center;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .ant-card-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        div {
+          font-size: 14px;
+          color: #555;
+          line-height: 1.5;
+
+          span {
+            font-weight: 600;
+            color: #000;
+          }
+        }
+
+        .ant-btn {
+          margin-top: 8px;
+          width: 100%;
+          max-width: 150px;
+          border-radius: 5px;
+          font-size: 14px;
+          font-weight: 500;
+          transition: transform 0.3s ease, background-color 0.3s ease;
+
+          &:hover {
+            transform: scale(1.05);
+            background-color: #1890ff;
+            color: #fff;
+          }
+
+          &:active {
+            transform: scale(0.95);
+          }
+
+          &.ant-btn-dangerous {
+            background-color: #ff4d4f;
+            border-color: #ff4d4f;
+
+            &:hover {
+              background-color: #ff7875;
+              border-color: #ff7875;
+            }
+          }
+        }
+
+        .ant-btn + .ant-btn {
+          margin-left: 8px;
+        }
+      }
+    }
+
+    .ant-card {
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .ant-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+
+        div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 14px;
+          color: #555;
+
+          span {
+            font-weight: 500;
+            color: #000;
+          }
+        }
+      }
+
+      .ant-btn-primary {
+        margin-top: 16px;
+        align-self: center;
+        width: 100%;
+        max-width: 200px;
+        background-color: #1890ff;
+        border-color: #1890ff;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #40a9ff;
+          border-color: #40a9ff;
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+}

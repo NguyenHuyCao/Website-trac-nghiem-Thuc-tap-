@@ -1,0 +1,113 @@
+.container-quiz {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
+
+  .detail-quiz {
+    flex: 3;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+
+    .question-quiz {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .answers-quiz {
+      margin-bottom: 20px;
+
+      .answer-quiz {
+        font-size: 16px;
+        margin-left: 8px;
+      }
+    }
+
+    .paginate-quiz {
+      text-align: center;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .table-questions {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+
+    h1 {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .number-questions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      div {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.2s;
+
+        &.active {
+          background-color: #1890ff;
+          color: #fff;
+          transform: scale(1.1);
+        }
+
+        &:hover {
+          background-color: #e6f7ff;
+        }
+
+        &.answered {
+          background-color: #d0e8c5;
+          color: #000;
+        }
+
+        &.correct {
+          background-color: #d4edda; /* Màu xanh nhạt cho câu trả lời đúng */
+          color: #155724;
+        }
+
+        &.incorrect {
+          background-color: #f8d7da; /* Màu đỏ nhạt cho câu trả lời sai */
+          color: #721c24;
+        }
+      }
+    }
+  }
+}
+
+.correct-answer {
+  color: green;
+}
+
+.incorrect-answer {
+  color: red;
+}
+
+.check-icon {
+  margin-left: 8px;
+  font-size: 16px;
+
+  &.correct {
+    color: green;
+  }
+
+  &.incorrect {
+    color: red;
+  }
+}
