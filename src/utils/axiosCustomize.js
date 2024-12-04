@@ -1,43 +1,49 @@
 import axios from "axios";
 import Nprogress from "nprogress";
+import "nprogress/nprogress.css"; // Import CSS cho Nprogress
 
+// Cấu hình Nprogress
 Nprogress.configure({
   showSpinner: false,
   trickleSpeed: 100,
 });
 
+// Tạo instance Axios
 const instance = axios.create({
-  baseURL: "https://quizzlet-19y7.onrender.com/",
+  baseURL: "https://quizzlet-19y7.onrender.com/", // Kiểm tra baseURL
 });
 
-// Add a request interceptor
+// Interceptor cho request
 instance.interceptors.request.use(
-  function (config) {
+  (config) => {
     Nprogress.start();
-    // Do something before request is sent
     return config;
   },
-  function (error) {
-    // Do something with request error
+  (error) => {
+    Nprogress.done();
+    console.error("Request error:", error); // Log lỗi request
     return Promise.reject(error);
   }
 );
 
-// Add a response interceptor
+// Interceptor cho response
 instance.interceptors.response.use(
-  function (response) {
+  (response) => {
     Nprogress.done();
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    return response && response.data ? response.data : response;
+    // Kiểm tra nếu response chứa `message` hoặc `quiz`
+    if (response.data?.message) {
+      console.log(response.data.message); // Log thông báo để xác nhận
+    }
+    console.log(response.data);
+
+    return response.data || response; // Trả về dữ liệu đầy đủ
   },
-  function (error) {
+  (error) => {
     Nprogress.done();
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response errors
-    return error && error.response && error.response.data
-      ? error.response.data
-      : Promise.reject(error);
+    console.error("Response error:", error); // Log lỗi response
+    return Promise.reject(
+      error?.response?.data?.message || error // Trả về message hoặc reject lỗi
+    );
   }
 );
 

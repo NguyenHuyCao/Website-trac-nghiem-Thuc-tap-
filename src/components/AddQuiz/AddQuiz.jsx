@@ -1,8 +1,8 @@
-import { Button, Input, Select } from "antd";
+import { Button, Input, Select, notification } from "antd";
 import { IoMdAdd } from "react-icons/io";
 import "./AddQuiz.scss";
 import { useState } from "react";
-import axios from "axios";
+import { postCreateNewQuiz } from "../../services/apiServices";
 
 const AddQuiz = () => {
   const [quiz, setQuiz] = useState({
@@ -10,7 +10,6 @@ const AddQuiz = () => {
     description: "",
     questions: [{ question: "", answers: ["", "", "", ""], correctAnswer: 0 }],
   });
-  const [error, setError] = useState("");
 
   const handleAddQuestion = () => {
     setQuiz({
@@ -55,28 +54,36 @@ const AddQuiz = () => {
 
   const validateQuiz = () => {
     if (!quiz.title.trim()) {
-      setError("Yêu cầu nhập tiêu đề bài thi");
+      notification.error({
+        message: "Lỗi",
+        description: "Yêu cầu nhập tiêu đề bài thi",
+      });
       return false;
     }
 
     for (let i = 0; i < quiz.questions.length; i++) {
       const question = quiz.questions[i];
       if (!question.question.trim()) {
-        setError(`Yêu cầu nhập nội dung cho câu hỏi ${i + 1}`);
+        notification.error({
+          message: "Lỗi",
+          description: `Yêu cầu nhập nội dung cho câu hỏi ${i + 1}`,
+        });
         return false;
       }
 
       for (let j = 0; j < question.answers.length; j++) {
         if (!question.answers[j].trim()) {
-          setError(
-            `Yêu cầu nhập nội dung cho đáp án ${j + 1} của câu hỏi ${i + 1}`
-          );
+          notification.error({
+            message: "Lỗi",
+            description: `Yêu cầu nhập nội dung cho đáp án ${
+              j + 1
+            } của câu hỏi ${i + 1}`,
+          });
           return false;
         }
       }
     }
 
-    setError("");
     return true;
   };
 
@@ -84,44 +91,41 @@ const AddQuiz = () => {
     if (!validateQuiz()) return;
 
     try {
-      const response = await axios.post(
-        "https://quizzlet-19y7.onrender.com/api/v1/quizz/add",
-        {
-          title: quiz.title,
-          description: quiz.description,
-          questions: quiz.questions,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+      const response = await postCreateNewQuiz(
+        quiz.title,
+        quiz.description,
+        quiz.questions
       );
 
-      console.log("Response:", response.data);
-      alert("Bài thi đã được lưu thành công!");
+      console.log(response);
 
       // Reset form
-      setQuiz({
-        title: "",
-        description: "",
-        questions: [
-          { question: "", answers: ["", "", "", ""], correctAnswer: 0 },
-        ],
-      });
     } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      setError("Đã xảy ra lỗi khi lưu bài thi. Vui lòng thử lại.");
+      console.log(error);
+      notification.error({
+        message: "Lỗi",
+        description: "Đã xảy ra lỗi khi lưu bài thi. Vui lòng thử lại.",
+      });
+      return;
     }
+    notification.success({
+      message: "Thành công",
+      description: "Bài thi đã được lưu thành công!",
+    });
+
+    setQuiz({
+      title: "",
+      description: "",
+      questions: [
+        { question: "", answers: ["", "", "", ""], correctAnswer: 0 },
+      ],
+    });
   };
 
   return (
     <div className="add-quiz">
       <h1>Thêm bài thi</h1>
-      {error && (
-        <p className="error-message" style={{ color: "red" }}>
-          {error}
-        </p>
-      )}
+
       <div className="quiz-info">
         <label>
           Tên bài thi<span style={{ color: "red" }}>*</span>:

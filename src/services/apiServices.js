@@ -1,14 +1,18 @@
-// import axios from "../utils/axiosCustomize";
-import axios from "axios";
+import axios from "../utils/axiosCustomize";
+// import axios from "axios";
 
 const postCreateNewQuiz = (title, description, questions) => {
-  const formData = new FormData();
-  formData.append("title", title);
-  formData.append("description", description);
-  formData.append("questions", JSON.stringify(questions));
   return axios.post(
-    "https://quizzlet-19y7.onrender.com/api/v1/quizz/add",
-    formData
+    "api/v1/quizz/add",
+    {
+      title: title,
+      description: description,
+      questions: questions,
+    },
+    {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    }
   );
 };
 
