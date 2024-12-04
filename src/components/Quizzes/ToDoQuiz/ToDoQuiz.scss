@@ -3,6 +3,7 @@
   flex-direction: row;
   gap: 20px;
   padding: 20px;
+  margin-top: 75px;
 
   .detail-quiz {
     flex: 3;
@@ -22,6 +23,57 @@
       .answer-quiz {
         font-size: 16px;
         margin-left: 8px;
+        transition: color 0.3s ease;
+
+        &.correct-answer {
+          color: green;
+        }
+
+        &.incorrect-answer {
+          color: red;
+        }
+
+        &.correct-highlight {
+          background-color: #e6ffe6;
+          font-weight: bold;
+        }
+      }
+
+      .check-icon {
+        margin-left: 8px;
+        font-size: 16px;
+
+        &.correct {
+          color: green;
+        }
+
+        &.incorrect {
+          color: red;
+        }
+      }
+    }
+
+    .marked-button {
+      background-color: #ffecb3;
+      color: #0e0d0d;
+      border: 1px solid #f9d67e;
+      border-radius: 5px;
+      font-weight: 500;
+      padding: 10px 20px;
+      transition: background-color 0.3s ease, transform 0.2s;
+
+      &:hover {
+        background-color: #f9d67e;
+      }
+
+      &:active {
+        background-color: #f7c957;
+      }
+
+      &:disabled {
+        background-color: #e0e0e0;
+        color: #b0b0b0;
+        border: 1px solid #c0c0c0;
       }
     }
 
@@ -49,7 +101,7 @@
       flex-wrap: wrap;
       gap: 10px;
 
-      div {
+      .question-item {
         width: 40px;
         height: 40px;
         display: flex;
@@ -60,7 +112,7 @@
         background-color: #f0f0f0;
         cursor: pointer;
         font-weight: bold;
-        transition: background-color 0.3s, transform 0.2s;
+        transition: background-color 0.3s ease, transform 0.2s;
 
         &.active {
           background-color: #1890ff;
@@ -78,36 +130,19 @@
         }
 
         &.correct {
-          background-color: #d4edda; /* Màu xanh nhạt cho câu trả lời đúng */
+          background-color: #d4edda;
           color: #155724;
         }
 
         &.incorrect {
-          background-color: #f8d7da; /* Màu đỏ nhạt cho câu trả lời sai */
+          background-color: #f8d7da;
           color: #721c24;
+        }
+
+        &.marked {
+          background-color: #ffecb3;
         }
       }
     }
-  }
-}
-
-.correct-answer {
-  color: green;
-}
-
-.incorrect-answer {
-  color: red;
-}
-
-.check-icon {
-  margin-left: 8px;
-  font-size: 16px;
-
-  &.correct {
-    color: green;
-  }
-
-  &.incorrect {
-    color: red;
   }
 }
