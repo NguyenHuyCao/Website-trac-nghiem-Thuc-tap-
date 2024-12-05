@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getQuizzes } from "../../services/apiServices";
 import "./Quizzes.scss";
 import { Button, Flex } from "antd";
+import { QRCode } from "antd";
 
 const ShowQuiz = () => {
   const navigate = useNavigate();
@@ -30,6 +31,10 @@ const ShowQuiz = () => {
               </div>
               <div>
                 <span>Mã bài thi:</span> {quiz._id}
+              </div>
+              <div>
+                <span>Mã QR: </span>{" "}
+                <QRCode value={`http://localhost:5050/home-exam/${quiz._id}`} />
               </div>
               <Flex gap="small" wrap>
                 <Button

@@ -19,7 +19,7 @@ const Quiz = () => {
     incorrectCount: 0,
     score: 0,
   });
-  const [timeLeft, setTimeLeft] = useState(600);
+  const [timeLeft, setTimeLeft] = useState(10);
   const [progress, setProgress] = useState(100);
   const [isTimeRunning, setIsTimeRunning] = useState(true);
 
@@ -35,15 +35,6 @@ const Quiz = () => {
       setUserAnswers(JSON.parse(savedAnswers));
     }
   }, [id]);
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    navigate("/"); // Navigate back to homepage or other desired page
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false); // Close modal
-  };
 
   useEffect(() => {
     if (!isTimeRunning) return; // Do not run the timer if quiz is already submitted
@@ -65,8 +56,8 @@ const Quiz = () => {
 
   useEffect(() => {
     // Calculate progress based on the time passed (timeElapsed)
-    const timeElapsed = 600 - timeLeft; // Total time (600 seconds) minus the time remaining
-    setProgress(Math.round((timeElapsed / 600) * 100)); // Progress increases over time
+    const timeElapsed = 10 - timeLeft; // Total time (10 seconds) minus the time remaining
+    setProgress(Math.round((timeElapsed / 10) * 100)); // Progress increases over time
   }, [timeLeft]);
 
   const formatTime = (seconds) => {
@@ -138,6 +129,15 @@ const Quiz = () => {
         ? prev.filter((item) => item !== index)
         : [...prev, index]
     );
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    navigate("/"); // Navigate back to homepage or other desired page
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false); // Close modal
   };
 
   return (
