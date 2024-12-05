@@ -30,7 +30,6 @@ const Quiz = () => {
     };
     fetchDataQuiz();
 
-    // Khôi phục bài làm từ LocalStorage
     const savedAnswers = localStorage.getItem("userAnswers");
     if (savedAnswers) {
       setUserAnswers(JSON.parse(savedAnswers));
@@ -268,6 +267,7 @@ const Quiz = () => {
           open={isModalVisible}
           onOk={handleOk}
           okText="Xem lại"
+          cancelText="Thoát"
           onCancel={handleCancel}
         >
           <div>
@@ -282,6 +282,8 @@ const Quiz = () => {
           title="Xác nhận"
           open={isConfirmModalVisible}
           onOk={calculateResults}
+          okText="Nộp bài"
+          cancelText="Làm tiếp"
           onCancel={() => setIsConfirmModalVisible(false)}
         >
           <p>Bạn chưa trả lời hết tất cả câu hỏi, bạn có muốn nộp bài không?</p>

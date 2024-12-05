@@ -1,43 +1,60 @@
 .home-quiz-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  height: 100vh;
-  padding: 20px;
-  background-color: #f5f5f5;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+
+  .title-quiz {
+    margin-top: -100px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .description-quiz {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .number-questions {
+    font-size: 1rem;
+    color: #999;
+    margin-bottom: 30px;
+    text-align: center;
+  }
 
   .quiz-button {
-    width: 200px;
-    padding: 10px;
-    margin: 10px;
+    &.start-btn {
+      background-color: #4caf50;
+      color: #fff;
+      margin-bottom: 10px;
+
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+
+    &.back-btn {
+      background-color: #f44336;
+      color: #fff;
+
+      &:hover {
+        background-color: #e53935;
+      }
+    }
+
+    width: 150px;
+    height: 40px;
+    font-size: 1rem;
+    border: none;
     border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s; // Thêm hiệu ứng cho màu nền và transform
-
-    &:hover {
-      transform: translateY(-3px); // Di chuyển nhẹ lên khi hover
-    }
-  }
-
-  .start-btn {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-
-    &:hover {
-      background-color: #45a049; // Đổi màu nền khi hover
-    }
-  }
-
-  .back-btn {
-    background-color: #f44336;
-    color: white;
-    border: none;
-
-    &:hover {
-      background-color: #e53935; // Đổi màu nền khi hover
-    }
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
 }

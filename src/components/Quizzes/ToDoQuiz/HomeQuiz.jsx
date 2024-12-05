@@ -1,13 +1,22 @@
 import { Button } from "antd";
-import { useNavigate, useParams } from "react-router-dom";
-import "./HomeQuiz.scss"; // Đảm bảo import file SCSS
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import "./HomeQuiz.scss";
 
 const HomeQuiz = () => {
-  const navigate = useNavigate(); // Sử dụng useNavigate từ v6
+  const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
 
   return (
     <div className="home-quiz-container">
+      <div>
+        <h1 className="title-quiz">{location.state.title}</h1>
+        <p className="description-quiz">{location.state.description}</p>
+        <p className="number-questions">
+          Số câu hỏi: {location.state.questions.length}
+        </p>
+      </div>
+
       <Button
         className="quiz-button start-btn"
         onClick={() => navigate(`/home-exam/${id}/exam`)}

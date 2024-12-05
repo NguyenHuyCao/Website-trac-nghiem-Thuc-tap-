@@ -34,7 +34,7 @@ const Home = () => {
 
     setIsLoading(true);
 
-    const currentQuiz = quizzes.filter((q) => q._id === value);
+    let currentQuiz = quizzes.filter((q) => q._id === value);
 
     if (!currentQuiz || currentQuiz.length !== 1) {
       setIsLoading(false);
@@ -42,12 +42,22 @@ const Home = () => {
       return;
     }
 
+    currentQuiz = currentQuiz[0];
+
+    console.log(currentQuiz);
     setTimeout(() => {
       setIsLoading(false);
       message.success(`Tìm kiếm thành công với ID: ${value}`);
-      navigate(`/home-exam/${value}`);
+      navigate(`/home-exam/${value}`, {
+        state: currentQuiz,
+      });
     }, 3000);
   };
+
+  // {
+  //           title: currentQuiz[0].title,
+  //           description: currentQuiz[0].description,
+  //         },
 
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
