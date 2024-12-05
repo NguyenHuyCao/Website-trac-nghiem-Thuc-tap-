@@ -6,6 +6,10 @@ import ShowQuiz from "./components/Quizzes/Quizzes.jsx";
 import Quiz from "./components/Quizzes/ShowQuiz/Quiz.jsx";
 import ToDoQuiz from "./components/Quizzes/ToDoQuiz/ToDoQuiz.jsx";
 import HomeQuiz from "./components/Quizzes/ToDoQuiz/HomeQuiz.jsx";
+import AdminPanel from "./components/Admin/AdminPanel.jsx";
+import AdminGamePage from "./components/Admin/AdminGamePage.jsx";
+import PlayerPanel from "./components/Player/PlayerPanel.jsx";
+import GamePlay from "./components/GamePlay/GamePlay.jsx";
 
 const Layout = () => {
   return (
@@ -15,6 +19,12 @@ const Layout = () => {
         <Route path="show-quiz" element={<ShowQuiz />} />
         <Route path="show-quiz/:id" element={<Quiz />} />
         <Route path="add-quiz" element={<AddQuiz />} />
+
+        {/* TEST CHỨC NĂNG */}
+        <Route path="admin" element={<AdminPanel />} />
+        <Route path="admin/game/:gameId" element={<AdminGamePage />} />
+        <Route path="player" element={<PlayerPanel />} />
+        <Route path="/game/:gameId/play" element={<GamePlay />} />
       </Route>
       <Route path="home-exam/:id" element={<HomeQuiz />} />
       <Route path="home-exam/:id/exam" element={<ToDoQuiz />} />

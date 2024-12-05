@@ -182,13 +182,15 @@ const AddQuiz = () => {
                 }))}
               />
             </label>
-            <Button
-              type="primary"
-              onClick={() => handleDeleteQuestion(qIndex)}
-              danger
-            >
-              Xóa câu hỏi
-            </Button>
+            {quiz.questions.length > 1 && (
+              <Button
+                type="primary"
+                onClick={() => handleDeleteQuestion(qIndex)}
+                danger
+              >
+                Xóa câu hỏi
+              </Button>
+            )}
           </div>
         ))}
         <Button onClick={handleAddQuestion}>

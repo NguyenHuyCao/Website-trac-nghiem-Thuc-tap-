@@ -4,7 +4,7 @@ import { Checkbox, Pagination, Button, Modal, Progress } from "antd";
 import { getDataQuiz } from "../../../services/apiServices";
 import "./ToDoQuiz.scss";
 
-const Quiz = () => {
+const ToDoQuiz = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [quiz, setQuiz] = useState([]);
@@ -19,7 +19,7 @@ const Quiz = () => {
     incorrectCount: 0,
     score: 0,
   });
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(50);
   const [progress, setProgress] = useState(100);
   const [isTimeRunning, setIsTimeRunning] = useState(true);
 
@@ -56,8 +56,8 @@ const Quiz = () => {
 
   useEffect(() => {
     // Calculate progress based on the time passed (timeElapsed)
-    const timeElapsed = 10 - timeLeft; // Total time (10 seconds) minus the time remaining
-    setProgress(Math.round((timeElapsed / 10) * 100)); // Progress increases over time
+    const timeElapsed = 50 - timeLeft; // Total time 50 seconds) minus the time remaining
+    setProgress(Math.round((timeElapsed / 50) * 100)); // Progress increases over time
   }, [timeLeft]);
 
   const formatTime = (seconds) => {
@@ -105,6 +105,8 @@ const Quiz = () => {
       userAnswer: userAnswers[index] !== undefined ? userAnswers[index] : null,
       isCorrect: userAnswers[index] === question.correctAnswer,
     }));
+
+    console.log(results);
 
     const correctCount = results.filter((result) => result.isCorrect).length;
     const incorrectCount = results.length - correctCount;
@@ -277,20 +279,21 @@ const Quiz = () => {
           </div>
         </Modal>
 
-        {/* Modal for confirmation when quiz is incomplete */}
+        {/* Modal confirm if not all questions are answered */}
         <Modal
           title="Xác nhận"
-          open={isConfirmModalVisible}
-          onOk={calculateResults}
-          okText="Nộp bài"
-          cancelText="Làm tiếp"
+          visible={isConfirmModalVisible}
           onCancel={() => setIsConfirmModalVisible(false)}
+          onOk={calculateResults}
         >
-          <p>Bạn chưa trả lời hết tất cả câu hỏi, bạn có muốn nộp bài không?</p>
+          <p>
+            Bạn chưa trả lời tất cả câu hỏi. Bạn có chắc chắn muốn nộp bài
+            không?
+          </p>
         </Modal>
       </div>
     </>
   );
 };
 
-export default Quiz;
+export default ToDoQuiz;

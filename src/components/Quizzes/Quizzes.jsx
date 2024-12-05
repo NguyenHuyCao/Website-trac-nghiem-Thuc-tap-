@@ -8,6 +8,7 @@ import { QRCode } from "antd";
 
 const ShowQuiz = () => {
   const navigate = useNavigate();
+  const [gameId, setGameId] = useState("");
   const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
@@ -18,6 +19,11 @@ const ShowQuiz = () => {
     };
     fetchQuizzes();
   }, []);
+
+  const handleNavigate = () => {
+    // Chỉ điều hướng đến trang AdminGamePage với gameId
+    navigate(`/admin/game/${gameId}`);
+  };
 
   return (
     <Row gutter={16} className={"show-quiz"}>
@@ -30,7 +36,13 @@ const ShowQuiz = () => {
                 <span>Mô tả: </span> {quiz.description}
               </div>
               <div>
-                <span>Mã bài thi:</span> {quiz._id}
+                <input
+                  type="text"
+                  placeholder="Game ID"
+                  value={gameId}
+                  onChange={(e) => setGameId(e.target.value)}
+                />
+                <Button onClick={handleNavigate}>Go to Game Management</Button>
               </div>
               <div>
                 <span>Mã QR: </span>{" "}
