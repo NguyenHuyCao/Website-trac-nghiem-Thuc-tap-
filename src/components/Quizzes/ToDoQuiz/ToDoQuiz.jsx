@@ -19,53 +19,80 @@ const ToDoQuiz = () => {
     incorrectCount: 0,
     score: 0,
   });
-  const [timeLeft, setTimeLeft] = useState(50);
+  const [timeLeft, setTimeLeft] = useState(3); // 5 minutes (3 seconds)
   const [progress, setProgress] = useState(100);
   const [isTimeRunning, setIsTimeRunning] = useState(true);
+  const [loading, setLoading] = useState(true); // Track loading state
+
+  const [checkLimited, setCheckLimited] = useState(false);
 
   useEffect(() => {
     const fetchDataQuiz = async () => {
       const data = await getDataQuiz(id);
-      setQuiz(data.questions || []);
+      setQuiz(data.questions);
+      setLoading(false); // Set loading to false when data is loaded
     };
     fetchDataQuiz();
+
+    // Load saved answers and other information from localStorage
+    const savedTimeLeft = localStorage.getItem("timeLeft");
+    const savedCurrentIndex = localStorage.getItem("currentIndex");
 
     const savedAnswers = localStorage.getItem("userAnswers");
     if (savedAnswers) {
       setUserAnswers(JSON.parse(savedAnswers));
     }
+
+    if (savedTimeLeft) {
+      setTimeLeft(JSON.parse(savedTimeLeft));
+    }
+
+    if (savedCurrentIndex) {
+      setCurrentIndex(parseInt(savedCurrentIndex, 10));
+    }
   }, [id]);
 
   useEffect(() => {
-    if (!isTimeRunning) return; // Do not run the timer if quiz is already submitted
+    if (loading || !isTimeRunning) return; // Chỉ bắt đầu đếm thời gian khi dữ liệu đã được tải và thời gian còn lại > 0
 
-    // Start a timer to update time passed
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(interval);
-          handleSubmitQuiz(); // Submit quiz automatically when time runs out
-          return 0;
+          // Tự động nộp bài khi hết thời gian
+          handleSubmitQuiz();
+          return 0; // Đặt thời gian còn lại là 0
         }
         return prevTime - 1;
       });
     }, 1000);
 
+    if (interval === 0) setCheckLimited(true);
+
     return () => clearInterval(interval);
-  }, [isTimeRunning]);
+  }, [isTimeRunning, loading]); // Bao gồm cả 'loading' trong dependencies
 
   useEffect(() => {
     // Calculate progress based on the time passed (timeElapsed)
-    const timeElapsed = 50 - timeLeft; // Total time 50 seconds) minus the time remaining
-    setProgress(Math.round((timeElapsed / 50) * 100)); // Progress increases over time
+    const timeElapsed = 3 - timeLeft; // Total time 5 minutes (3 seconds) minus the time remaining
+    setProgress(Math.round((timeElapsed / 3) * 100)); // Progress increases over time
+
+    localStorage.setItem("timeLeft", JSON.stringify(timeLeft));
+    localStorage.setItem("currentIndex", JSON.stringify(currentIndex));
   }, [timeLeft]);
+
+  useEffect(() => {
+    // Save user answers to localStorage whenever they change
+    localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
+  }, [userAnswers]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${secs
+    const resultTime = `${minutes.toString().padStart(2, "0")} : ${secs
       .toString()
       .padStart(2, "0")}`;
+    return resultTime;
   };
 
   const handlePaginationChange = (page) => {
@@ -77,47 +104,62 @@ const ToDoQuiz = () => {
   };
 
   const handleSelectAnswer = (questionIndex, answerIndex) => {
+    if (timeLeft === 0 || isSubmitted) return; // Ngăn chọn khi hết thời gian hoặc đã nộp bài
     setUserAnswers({
       ...userAnswers,
       [questionIndex]: answerIndex,
     });
   };
 
-  const handleSubmitQuiz = () => {
+  const handleSubmitQuiz = async () => {
     if (isSubmitted) return;
 
+    // Kiểm tra các câu hỏi chưa trả lời
     const unansweredQuestions = quiz.filter(
       (_, index) => userAnswers[index] === undefined
     );
 
-    if (unansweredQuestions.length > 0) {
+    if (unansweredQuestions.length > 0 && !checkLimited) {
+      console.log("isTimeRunning", checkLimited);
       setIsConfirmModalVisible(true);
       return;
     }
 
-    calculateResults();
+    // Tự động tính toán kết quả khi hết thời gian
+    await calculateResults();
   };
 
-  const calculateResults = () => {
-    const results = quiz.map((question, index) => ({
-      question: question.question,
-      correctAnswer: question.correctAnswer,
-      userAnswer: userAnswers[index] !== undefined ? userAnswers[index] : null,
-      isCorrect: userAnswers[index] === question.correctAnswer,
-    }));
+  const calculateResults = async () => {
+    if (quiz.length === 0) {
+      console.error("Quiz data is not loaded yet.");
+      return;
+    }
 
-    console.log(results);
+    console.log(quiz); // This will log quiz data when it's available
+
+    const results = quiz.map((question, index) => {
+      const userAnswer = userAnswers[index];
+      const isCorrect = userAnswer === question.correctAnswer;
+
+      return {
+        question: question.question,
+        correctAnswer: question.correctAnswer,
+        userAnswer: userAnswer !== undefined ? userAnswer : null,
+        isCorrect: isCorrect,
+      };
+    });
 
     const correctCount = results.filter((result) => result.isCorrect).length;
     const incorrectCount = results.length - correctCount;
-
-    const score = ((correctCount / quiz.length) * 100).toFixed(2);
+    const score =
+      quiz.length > 0 ? ((correctCount / quiz.length) * 100).toFixed(2) : 0;
 
     setQuizResult({ correctCount, incorrectCount, score });
     setIsSubmitted(true);
-    setIsTimeRunning(false); // Stop the timer when quiz is submitted
+    setIsTimeRunning(false); // Dừng timer khi nộp bài
 
     // Hiển thị Modal với kết quả
+
     setIsModalVisible(true);
     setIsConfirmModalVisible(false);
 
@@ -206,8 +248,12 @@ const ToDoQuiz = () => {
                     <p
                       className={`answer-quiz ${
                         isCorrect && isSubmitted ? "correct-answer" : ""
-                      } ${isIncorrect && isSubmitted ? "incorrect-answer" : ""}
-              ${isCorrectAnswer && !isCorrect ? "correct-highlight" : ""}`}
+                      } ${isIncorrect && isSubmitted ? "incorrect-answer" : ""} 
+                        ${
+                          isCorrectAnswer && !isCorrect
+                            ? "correct-highlight"
+                            : ""
+                        }`}
                     >
                       {answer}{" "}
                       {isCorrect && isSubmitted && (
@@ -247,7 +293,10 @@ const ToDoQuiz = () => {
         </div>
 
         <div className="submit-quiz">
-          <span className="timer">{formatTime(timeLeft)}</span>
+          <span className={`timer ${timeLeft === 0 ? "time-over" : ""}`}>
+            {formatTime(timeLeft)}
+          </span>
+
           {!isSubmitted ? (
             <Button
               type="primary"
@@ -257,41 +306,36 @@ const ToDoQuiz = () => {
               Nộp bài
             </Button>
           ) : (
-            <Button className="exit-button" onClick={() => navigate("/")}>
-              Thoát
+            <Button onClick={handleCancel} type="primary">
+              Trở về trang chủ
             </Button>
           )}
         </div>
-
-        {/* Modal for quiz result */}
-        <Modal
-          title="Kết quả bài thi"
-          open={isModalVisible}
-          onOk={handleOk}
-          okText="Xem lại"
-          cancelText="Thoát"
-          onCancel={handleCancel}
-        >
-          <div>
-            <p>Số câu đúng: {quizResult.correctCount}</p>
-            <p>Số câu sai: {quizResult.incorrectCount}</p>
-            <p>Điểm số: {quizResult.score} điểm</p>
-          </div>
-        </Modal>
-
-        {/* Modal confirm if not all questions are answered */}
-        <Modal
-          title="Xác nhận"
-          open={isConfirmModalVisible}
-          onCancel={() => setIsConfirmModalVisible(false)}
-          onOk={calculateResults}
-        >
-          <p>
-            Bạn chưa trả lời tất cả câu hỏi. Bạn có chắc chắn muốn nộp bài
-            không?
-          </p>
-        </Modal>
       </div>
+
+      <Modal
+        open={isModalVisible}
+        onCancel={handleCancel}
+        onOk={handleOk}
+        title="Kết quả bài thi"
+      >
+        <div className="quiz-result">
+          <p>Điểm số của bạn: {quizResult.score} điểm</p>
+          <p>Số câu đúng: {quizResult.correctCount}</p>
+          <p>Số câu sai: {quizResult.incorrectCount}</p>
+        </div>
+      </Modal>
+
+      <Modal
+        open={isConfirmModalVisible}
+        onCancel={() => setIsConfirmModalVisible(false)}
+        cancelText={"Xem bài"}
+        onOk={calculateResults}
+        okText={"Xác nhận"}
+        title="Bạn có chắc chắn nộp bài?"
+      >
+        <p>Các câu hỏi chưa trả lời sẽ được tính là sai.</p>
+      </Modal>
     </>
   );
 };
