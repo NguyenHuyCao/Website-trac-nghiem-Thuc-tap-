@@ -2,20 +2,21 @@ import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const socket = io("https://quizzlet-19y7.onrender.com/"); // Kết nối tới server
+// Kết nối đến server
+const socket = io("https://quizzlet-19y7.onrender.com/");
 
 const PlayerPanel = () => {
   const [gameId, setGameId] = useState(""); // ID của trò chơi
   const [username, setUsername] = useState(""); // Tên người chơi
   const [message, setMessage] = useState(""); // Thông báo hiển thị
   const [players, setPlayers] = useState([]); // Danh sách người chơi trong phòng chờ
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Dùng để điều hướng
 
   useEffect(() => {
     // Lắng nghe sự kiện cập nhật danh sách người chơi từ server
     socket.on("game-updated", (game) => {
       if (game.gameId === gameId) {
-        setPlayers(game.players || []);
+        setPlayers(game.players || []); // Cập nhật danh sách người chơi
         setMessage("Waiting for admin to start the game...");
       }
     });
@@ -23,18 +24,20 @@ const PlayerPanel = () => {
     // Lắng nghe sự kiện bắt đầu trò chơi
     socket.on("start-game", ({ url }) => {
       setMessage("The game is starting...");
-      navigate(url); // Điều hướng đến đường dẫn được gửi từ server
+      // Điều hướng đến URL và thêm username vào query params
+      navigate(`${url}?username=${encodeURIComponent(username)}`);
     });
 
+    // Dọn sạch các sự kiện khi component bị unmount
     return () => {
-      socket.off("game-updated"); // Dọn sạch sự kiện khi component bị hủy
+      socket.off("game-updated");
       socket.off("start-game");
     };
-  }, [gameId, navigate]);
+  }, [gameId, username, navigate]);
 
   const joinGame = () => {
     if (gameId.trim() && username.trim()) {
-      // Gửi thông tin tham gia lên server
+      // Gửi thông tin tham gia trò chơi lên server
       socket.emit("join-game", { gameId, username });
       setMessage(`Joined game ${gameId}. Waiting for admin...`);
     } else {

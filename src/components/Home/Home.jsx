@@ -140,102 +140,124 @@
 // };
 
 // export default Home;
-
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
+import { Input, Button, message, Upload } from "antd";
+import { Html5Qrcode } from "html5-qrcode";
+import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import "./Home.scss";
 
-const socket = io("https://quizzlet-19y7.onrender.com/"); // Kết nối tới server
+const { Dragger } = Upload;
+
+const socket = io("https://quizzlet-19y7.onrender.com/");
 
 const PlayerPanel = () => {
-  const [gameId, setGameId] = useState(""); // ID của trò chơi
-  const [username, setUsername] = useState(""); // Tên người chơi
-  const [message, setMessage] = useState(""); // Thông báo hiển thị
-  const [players, setPlayers] = useState([]); // Danh sách người chơi trong phòng chờ
+  const [gameId, setGameId] = useState("");
+  const [username, setUsername] = useState("");
+  const [players, setPlayers] = useState([]);
+  const [feedback, setFeedback] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Lắng nghe sự kiện cập nhật danh sách người chơi từ server
     socket.on("game-updated", (game) => {
       if (game.gameId === gameId) {
         setPlayers(game.players || []);
-        setMessage("Waiting for admin to start the game...");
+        setFeedback("Đang chờ quản trị viên bắt đầu trò chơi...");
       }
     });
 
-    // Lắng nghe sự kiện bắt đầu trò chơi
     socket.on("start-game", ({ url }) => {
-      setMessage("The game is starting...");
-      navigate(url); // Điều hướng đến đường dẫn được gửi từ server
+      setFeedback("The game is starting...");
+      navigate(`${url}?username=${encodeURIComponent(username)}`);
     });
 
     return () => {
-      socket.off("game-updated"); // Dọn sạch sự kiện khi component bị hủy
+      socket.off("game-updated");
       socket.off("start-game");
     };
-  }, [gameId, navigate]);
+  }, [gameId, username, navigate]);
 
   const joinGame = () => {
-    if (gameId.trim() && username.trim()) {
-      // Gửi thông tin tham gia lên server
-      socket.emit("join-game", { gameId, username });
-      setMessage(`Joined game ${gameId}. Waiting for admin...`);
-    } else {
-      setMessage("Please enter a valid Game ID and Username!");
+    if (!gameId || !username) {
+      message.warning("Please enter both Game ID and Username!");
+      return;
+    }
+    socket.emit("join-game", { gameId, username });
+    setFeedback(`Joined game ${gameId}. Waiting for admin...`);
+  };
+
+  const handleQRCodeScan = async (file) => {
+    const qrContainerId = "qr-reader-temp";
+    let qrContainer = document.getElementById(qrContainerId);
+    if (!qrContainer) {
+      qrContainer = document.createElement("div");
+      qrContainer.id = qrContainerId;
+      qrContainer.style.display = "none";
+      document.body.appendChild(qrContainer);
+    }
+
+    const html5QrCode = new Html5Qrcode(qrContainerId);
+
+    try {
+      const result = await html5QrCode.scanFile(file, true);
+      const idFromQR = result.split("/").pop(); // Assume Game ID is at the end
+      setGameId(idFromQR);
+      message.success(`Game ID extracted from QR Code: ${idFromQR}`);
+    } catch (err) {
+      message.error("Failed to scan QR Code.");
+    } finally {
+      html5QrCode.clear();
     }
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "500px", margin: "auto" }}>
-      <h1>Join Game</h1>
-      <div>
-        <input
-          type="text"
-          placeholder="Enter Game ID"
-          value={gameId}
-          onChange={(e) => setGameId(e.target.value)}
-          style={{
-            marginBottom: "10px",
-            padding: "10px",
-            width: "100%",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
+    <div className="player-panel-container">
+      <h1 className="title">Tham gia vào bài thi</h1>
+
+      <Input
+        className="input-field"
+        placeholder="Enter Game ID"
+        value={gameId}
+        onChange={(e) => setGameId(e.target.value)}
+      />
+      <Input
+        className="input-field"
+        placeholder="Enter Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <Button className="join-button" type="primary" block onClick={joinGame}>
+        Tham gia
+      </Button>
+      <p className="feedback-text">{feedback}</p>
+
+      <div className="qr-upload-container">
+        <Dragger
+          name="file"
+          multiple={false}
+          accept="image/*"
+          customRequest={({ file, onSuccess }) => {
+            handleQRCodeScan(file);
+            onSuccess("ok");
           }}
-        />
-        <input
-          type="text"
-          placeholder="Enter Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{
-            marginBottom: "10px",
-            padding: "10px",
-            width: "100%",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-          }}
-        />
-        <button
-          onClick={joinGame}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
+          showUploadList={false}
         >
-          Join Game
-        </button>
-        <p style={{ marginTop: "10px", color: "red" }}>{message}</p>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p>Kéo và thả hình ảnh Mã QR vào đây hoặc nhấp để tải lên.</p>
+        </Dragger>
       </div>
+
       {players.length > 0 && (
-        <div>
-          <h3>Players in the Room:</h3>
+        <div className="players-list">
+          <h3>Người tham gia:</h3>
           <ul>
             {players.map((player, index) => (
-              <li key={index}>{player.username}</li>
+              <li key={index} className="player-item">
+                {player.username}
+              </li>
             ))}
           </ul>
         </div>
