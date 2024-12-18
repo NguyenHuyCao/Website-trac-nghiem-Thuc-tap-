@@ -24,8 +24,8 @@ const Layout = () => {
         <Route path="admin" element={<AdminPanel />} />
 
         <Route path="player" element={<PlayerPanel />} />
-        <Route path="/game/:gameId/play" element={<GamePlay />} />
       </Route>
+      <Route path="/game/:gameId/play" element={<GamePlay />} />
       <Route path="admin/game/:gameId" element={<AdminGamePage />} />
       <Route path="home-exam/:id" element={<HomeQuiz />} />
       <Route path="home-exam/:id/exam" element={<ToDoQuiz />} />

@@ -15,9 +15,11 @@
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 15px;
+      height: 50px;
     }
 
     .answers-quiz {
+      margin-left: 30px;
       margin-bottom: 20px;
 
       .answer-quiz {
@@ -157,14 +159,16 @@
     justify-content: space-between;
 
     .timer {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       text-align: center;
+      margin-top: 50px;
       margin-bottom: 20px;
     }
 
     button {
       margin-top: auto;
+      margin-bottom: 50px;
     }
 
     .exit-button {

@@ -1,0 +1,38 @@
+.game-over {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 20px); // Chiều cao toàn màn hình
+  background-color: #f7f7f7; // Màu nền nhạt, có thể tùy chỉnh
+  text-align: center;
+
+  .title-final {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .number-correct,
+  .score-final {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    color: #555;
+  }
+
+  .score-final {
+    color: #007bff; // Màu xanh nổi bật cho điểm số
+  }
+
+  .btn-review {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    padding: 1.2rem 2rem;
+    background-color: #1890ff; // Màu xanh của Ant Design
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}

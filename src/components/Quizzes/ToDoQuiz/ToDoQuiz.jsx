@@ -282,7 +282,7 @@ const ToDoQuiz = () => {
         {/* Modal confirm if not all questions are answered */}
         <Modal
           title="Xác nhận"
-          visible={isConfirmModalVisible}
+          open={isConfirmModalVisible}
           onCancel={() => setIsConfirmModalVisible(false)}
           onOk={calculateResults}
         >
