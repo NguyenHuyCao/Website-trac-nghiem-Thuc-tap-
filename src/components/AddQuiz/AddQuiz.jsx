@@ -2,14 +2,20 @@ import { Button, Input, Select, notification } from "antd";
 import { IoMdAdd } from "react-icons/io";
 import "./AddQuiz.scss";
 import { useState } from "react";
-import { postCreateNewQuiz } from "../../services/apiServices";
+import { useDispatch, useSelector } from "react-redux";
+import { addQuiz } from "../../features/quizz/quizzSlice"; // Import the addQuiz thunk
+import { toast } from "react-toastify";
 
 const AddQuiz = () => {
   const [quiz, setQuiz] = useState({
     title: "",
     description: "",
     questions: [{ question: "", answers: ["", "", "", ""], correctAnswer: 0 }],
+    duration: "", // Thay đổi ở đây: giá trị mặc định là chuỗi rỗng
   });
+
+  const dispatch = useDispatch();
+  const { addQuizLoading, addQuizError } = useSelector((state) => state.quiz);
 
   const handleAddQuestion = () => {
     setQuiz({
@@ -52,33 +58,36 @@ const AddQuiz = () => {
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
 
+  const handleDurationChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 0) {
+      setQuiz({ ...quiz, duration: value });
+    }
+  };
+
   const validateQuiz = () => {
     if (!quiz.title.trim()) {
-      notification.error({
-        message: "Lỗi",
-        description: "Yêu cầu nhập tiêu đề bài thi",
-      });
+      toast.error("Yêu cầu nhập tiêu đề bài thi");
+      return false;
+    }
+
+    if (quiz.duration <= 0) {
+      toast.error("Thời gian làm bài phải lớn hơn 0");
       return false;
     }
 
     for (let i = 0; i < quiz.questions.length; i++) {
       const question = quiz.questions[i];
       if (!question.question.trim()) {
-        notification.error({
-          message: "Lỗi",
-          description: `Yêu cầu nhập nội dung cho câu hỏi ${i + 1}`,
-        });
+        toast.error(`Yêu cầu nhập nội dung cho câu hỏi ${i + 1}`);
         return false;
       }
 
       for (let j = 0; j < question.answers.length; j++) {
         if (!question.answers[j].trim()) {
-          notification.error({
-            message: "Lỗi",
-            description: `Yêu cầu nhập nội dung cho đáp án ${
-              j + 1
-            } của câu hỏi ${i + 1}`,
-          });
+          toast.error(
+            `Yêu cầu nhập nội dung cho đáp án ${j + 1} của câu hỏi ${i + 1}`
+          );
           return false;
         }
       }
@@ -91,35 +100,12 @@ const AddQuiz = () => {
     if (!validateQuiz()) return;
 
     try {
-      const response = await postCreateNewQuiz(
-        quiz.title,
-        quiz.description,
-        quiz.questions
-      );
-
-      console.log(response);
-
-      // Reset form
+      // Dispatch the addQuiz action
+      await dispatch(addQuiz(quiz));
+      // Thông báo thành công khi lưu bài thi
     } catch (error) {
-      console.log(error);
-      notification.error({
-        message: "Lỗi",
-        description: "Đã xảy ra lỗi khi lưu bài thi. Vui lòng thử lại.",
-      });
-      return;
+      toast.error("Đã xảy ra lỗi khi lưu bài thi. Vui lòng thử lại.");
     }
-    notification.success({
-      message: "Thành công",
-      description: "Bài thi đã được lưu thành công!",
-    });
-
-    setQuiz({
-      title: "",
-      description: "",
-      questions: [
-        { question: "", answers: ["", "", "", ""], correctAnswer: 0 },
-      ],
-    });
   };
 
   return (
@@ -143,7 +129,18 @@ const AddQuiz = () => {
             onChange={(e) => setQuiz({ ...quiz, description: e.target.value })}
           />
         </label>
+        <label>
+          Thời gian làm bài (giây):
+          <Input
+            type="number"
+            // min="0"
+            placeholder="Nhập thời gian làm bài"
+            value={quiz.duration}
+            onChange={handleDurationChange}
+          />
+        </label>
       </div>
+
       <div className="questions">
         <h2>Câu hỏi</h2>
         {quiz.questions.map((q, qIndex) => (
@@ -198,14 +195,20 @@ const AddQuiz = () => {
           Thêm câu hỏi
         </Button>
       </div>
+
       <Button
         type="primary"
         className="submit-btn"
         onClick={handleSubmit}
         block
+        loading={addQuizLoading} // Show loading state while adding quiz
       >
         Lưu bài thi
       </Button>
+
+      {addQuizError && (
+        <notification message="Lỗi" description={addQuizError} type="error" />
+      )}
     </div>
   );
 };

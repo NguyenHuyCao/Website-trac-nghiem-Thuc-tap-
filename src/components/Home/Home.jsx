@@ -168,7 +168,7 @@ const PlayerPanel = () => {
     });
 
     socket.on("start-game", ({ url }) => {
-      setFeedback("The game is starting...");
+      setFeedback("Trò chơi đang bắt đầu...");
       navigate(`${url}?username=${encodeURIComponent(username)}`);
     });
 
@@ -180,11 +180,11 @@ const PlayerPanel = () => {
 
   const joinGame = () => {
     if (!gameId || !username) {
-      message.warning("Please enter both Game ID and Username!");
+      message.warning("Vui lòng nhập cả Mã Trò Chơi và Tên Người Dùng!");
       return;
     }
     socket.emit("join-game", { gameId, username });
-    setFeedback(`Joined game ${gameId}. Waiting for admin...`);
+    setFeedback(`Đã tham gia trò chơi ${gameId}. Đang chờ quản trị viên...`);
   };
 
   const handleQRCodeScan = async (file) => {
@@ -203,9 +203,9 @@ const PlayerPanel = () => {
       const result = await html5QrCode.scanFile(file, true);
       const idFromQR = result.split("/").pop(); // Assume Game ID is at the end
       setGameId(idFromQR);
-      message.success(`Game ID extracted from QR Code: ${idFromQR}`);
+      message.success(`Mã Game được trích xuất từ mã QR: ${idFromQR}`);
     } catch (err) {
-      message.error("Failed to scan QR Code.");
+      message.error("Không thể quét mã QR");
     } finally {
       html5QrCode.clear();
     }
@@ -217,13 +217,13 @@ const PlayerPanel = () => {
 
       <Input
         className="input-field"
-        placeholder="Enter Game ID"
+        placeholder="Nhập ID trò chơi"
         value={gameId}
         onChange={(e) => setGameId(e.target.value)}
       />
       <Input
         className="input-field"
-        placeholder="Enter Username"
+        placeholder="Nhập tên người dùng"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />

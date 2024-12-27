@@ -15,7 +15,7 @@ const AdminGamePage = () => {
   const [isFetchDisabled, setIsFetchDisabled] = useState(true); // Trạng thái kích hoạt nút
   const [fetchTimer, setFetchTimer] = useState(10); // Thời gian đếm ngược
 
-  console.log(state);
+  console.log(summary);
 
   useEffect(() => {
     // Lắng nghe sự kiện "game-updated" từ server
@@ -56,7 +56,7 @@ const AdminGamePage = () => {
     }
   }, [fetchTimer, isFetchDisabled]);
 
-  const idgame = "674f1a277b71a0cbd8e35bf8"; // ID trò chơi cố định
+  const idgame = state.quizId; // ID trò chơi cố định
 
   const createGame = () => {
     // Gửi sự kiện tạo game đến server
@@ -119,6 +119,28 @@ const AdminGamePage = () => {
         >
           {isFetchDisabled ? `Đợi ${fetchTimer}s` : "Kết quả"}
         </button>
+      )}
+
+      {summary && Array.isArray(summary.players) && (
+        <div className="final-player">
+          <div className="number-player">{summary.playersCount}</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Tên</th>
+                <th>Điểm số</th>
+              </tr>
+            </thead>
+            <tbody>
+              {summary.players.map((p, index) => (
+                <tr key={index}>
+                  <td>{p.username}</td>
+                  <td>{p.score}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

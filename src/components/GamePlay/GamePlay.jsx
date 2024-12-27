@@ -35,6 +35,7 @@ const GamePlay = () => {
     socket.emit("play-game", gameId);
 
     socket.on("game-questions", ({ questions, duration }) => {
+      console.log("Thoi gian lam bai: ", duration);
       setQuestions(questions);
       totalTime.current = duration;
 

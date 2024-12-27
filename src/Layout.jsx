@@ -10,7 +10,10 @@ import AdminPanel from "./components/Admin/AdminPanel.jsx";
 import AdminGamePage from "./components/Admin/AdminGamePage.jsx";
 import PlayerPanel from "./components/Player/PlayerPanel.jsx";
 import GamePlay from "./components/GamePlay/GamePlay.jsx";
-
+import Login from "./components/Login/Login.jsx";
+import Signup from "./components/Signup/Signup.jsx";
+import EmailVerify from "./components/EmailVerify/EmailVerify.jsx";
+import CheckLogin from "./components/CheckLogin/CheckLogin.jsx";
 const Layout = () => {
   return (
     <Routes>
@@ -29,6 +32,17 @@ const Layout = () => {
       <Route path="admin/game/:gameId" element={<AdminGamePage />} />
       <Route path="home-exam/:id" element={<HomeQuiz />} />
       <Route path="home-exam/:id/exam" element={<ToDoQuiz />} />
+
+      {/* TEST LOGIN */}
+      <Route path="/login" element={<Login></Login>} />
+
+      {/* TEST SIGNUP */}
+      <Route path="/signup" element={<Signup></Signup>} />
+
+      {/* TEST VERIFY */}
+      <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
+
+      <Route path="/check" element={<CheckLogin></CheckLogin>} />
     </Routes>
   );
 };

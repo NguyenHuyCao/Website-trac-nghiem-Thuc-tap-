@@ -8,6 +8,7 @@ const ToDoQuiz = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [quiz, setQuiz] = useState([]);
+  // console.log(quiz);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);

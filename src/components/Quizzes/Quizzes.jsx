@@ -15,6 +15,7 @@ const ShowQuiz = () => {
     const fetchQuizzes = async () => {
       const data = await getQuizzes();
       setQuizzes(data);
+      console.log("DU LIEU CAU HOI: ", data);
     };
     fetchQuizzes();
   }, []);
@@ -22,7 +23,7 @@ const ShowQuiz = () => {
   const handleNavigate = () => {
     if (selectedQuiz) {
       navigate(`/admin/game/${gameId}`, {
-        state: { quiz: selectedQuiz, gameId },
+        state: { quiz: selectedQuiz, gameId, quizId: selectedQuiz._id },
       });
     }
   };
