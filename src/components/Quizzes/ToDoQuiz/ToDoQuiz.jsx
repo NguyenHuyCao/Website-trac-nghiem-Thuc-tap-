@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Checkbox, Pagination, Button, Modal, Progress } from "antd";
 import { getDataQuiz } from "../../../services/apiServices";
+
 import "./ToDoQuiz.scss";
 
 const ToDoQuiz = () => {
+  const location = useLocation();
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [quiz, setQuiz] = useState([]);
@@ -20,7 +23,7 @@ const ToDoQuiz = () => {
     incorrectCount: 0,
     score: 0,
   });
-  const [timeLeft, setTimeLeft] = useState(3); // 5 minutes (3 seconds)
+  const [timeLeft, setTimeLeft] = useState(location.state); // 5 minutes (3 seconds)
   const [progress, setProgress] = useState(100);
   const [isTimeRunning, setIsTimeRunning] = useState(true);
   const [loading, setLoading] = useState(true); // Track loading state
@@ -88,11 +91,14 @@ const ToDoQuiz = () => {
   }, [userAnswers]);
 
   const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    const resultTime = `${minutes.toString().padStart(2, "0")} : ${secs
+    const hours = Math.floor(seconds / 3600); // Tính số giờ
+    const minutes = Math.floor((seconds % 3600) / 60); // Tính số phút còn lại
+    const secs = seconds % 60; // Tính số giây còn lại
+
+    // Định dạng kết quả với 2 chữ số cho mỗi đơn vị thời gian
+    const resultTime = `${hours.toString().padStart(2, "0")} : ${minutes
       .toString()
-      .padStart(2, "0")}`;
+      .padStart(2, "0")} : ${secs.toString().padStart(2, "0")}`;
     return resultTime;
   };
 

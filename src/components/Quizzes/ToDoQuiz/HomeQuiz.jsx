@@ -7,6 +7,8 @@ const HomeQuiz = () => {
   const location = useLocation();
   const { id } = useParams();
 
+  console.log(location);
+
   return (
     <div className="home-quiz-container">
       <div>
@@ -19,7 +21,9 @@ const HomeQuiz = () => {
 
       <Button
         className="quiz-button start-btn"
-        onClick={() => navigate(`/home-exam/${id}/exam`)}
+        onClick={() =>
+          navigate(`/home-exam/${id}/exam`, { state: location.state.duration })
+        }
       >
         Bắt đầu
       </Button>

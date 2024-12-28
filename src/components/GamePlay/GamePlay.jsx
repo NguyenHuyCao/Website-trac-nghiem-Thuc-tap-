@@ -149,11 +149,15 @@ const GamePlay = () => {
   };
 
   const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${secs
+    const hours = Math.floor(seconds / 3600); // Tính số giờ
+    const minutes = Math.floor((seconds % 3600) / 60); // Tính số phút còn lại
+    const secs = seconds % 60; // Tính số giây còn lại
+
+    // Định dạng kết quả với 2 chữ số cho mỗi đơn vị thời gian
+    const resultTime = `${hours.toString().padStart(2, "0")} : ${minutes
       .toString()
-      .padStart(2, "0")}`;
+      .padStart(2, "0")} : ${secs.toString().padStart(2, "0")}`;
+    return resultTime;
   };
 
   const handleCancel = () => {

@@ -7,6 +7,7 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 50px;
 
   .quiz-title {
     font-size: 2.5rem;
@@ -139,4 +140,129 @@
       padding: 10px 30px;
     }
   }
+}
+.final-player {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  .number-player {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .result-table-container {
+    margin-top: 20px;
+
+    h3 {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #444;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .result-table {
+      width: 40%;
+      border-collapse: collapse;
+      margin: 0 auto;
+
+      thead {
+        background-color: #f7f7f7;
+
+        th {
+          padding: 10px;
+          font-size: 1.2rem;
+          font-weight: bold;
+          color: #333;
+          text-align: left;
+          border-bottom: 2px solid #ddd;
+        }
+      }
+
+      tbody {
+        // margin-left: 20px;
+        tr {
+          &:nth-child(odd) {
+            background-color: #fafafa;
+          }
+
+          &:nth-child(even) {
+            background-color: #f4f4f4;
+          }
+
+          &:hover {
+            background-color: #eaeaea;
+          }
+
+          .result-row {
+            td {
+              padding: 8px 10px;
+              font-size: 1rem;
+              color: #555;
+              border-bottom: 1px solid #ddd;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .chart-container {
+    margin-top: 30px;
+
+    h3 {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #444;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    canvas {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .number-player {
+      font-size: 1.2rem;
+    }
+
+    .result-table-container {
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      .result-table {
+        th,
+        td {
+          font-size: 0.9rem;
+          padding: 6px 8px;
+        }
+      }
+    }
+
+    .chart-container {
+      h3 {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+.result-name {
+  font-weight: bold;
+  text-align: center;
+}
+
+.result-score {
+  // text-align: right;
+  padding: 10px;
 }
