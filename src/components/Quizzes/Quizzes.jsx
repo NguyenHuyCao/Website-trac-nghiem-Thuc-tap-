@@ -42,7 +42,15 @@ const ShowQuiz = () => {
   return (
     <Row gutter={16} className={"show-quiz"}>
       {quizzes?.quizzes?.map((quiz, index) => (
-        <Col key={index} span={8} className={"quiz-card"}>
+        <Col
+          key={index}
+          xs={24}
+          sm={12}
+          md={8}
+          lg={8}
+          xl={8}
+          className={"quiz-card"}
+        >
           <Card title={quiz.title} bordered={false} className="card">
             <div>
               <span>Mô tả: </span> {quiz.description}
@@ -75,7 +83,7 @@ const ShowQuiz = () => {
       >
         <div style={{ marginBottom: "20px" }}>
           <Input
-            placeholder="Nhập Game ID"
+            placeholder="Nhập ID"
             value={gameId}
             onChange={(e) => setGameId(e.target.value)}
           />

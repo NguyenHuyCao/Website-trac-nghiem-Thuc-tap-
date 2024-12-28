@@ -1,25 +1,25 @@
-// Biến màu sắc
 $background-color: #f8f9fa;
 $text-color: #333;
 $hover-color: #007bff;
 $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
+// Header
 .header {
-  position: fixed; // Cố định header
-  top: 0; // Căn trên cùng
-  left: 0; // Căn trái
-  width: 100%; // Chiếm toàn bộ chiều rộng
-  z-index: 1000; // Đảm bảo header nằm trên các thành phần khác
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   background-color: $background-color;
   padding: 10px 20px;
   box-shadow: $box-shadow;
 
   .nav {
     display: flex;
-    height: 40px;
-    padding-left: 30px;
     justify-content: space-between;
     align-items: center;
+    height: 60px;
+    padding-left: 30px;
 
     .nav-list {
       list-style: none;
@@ -59,5 +59,45 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
 // Đảm bảo nội dung không bị che bởi header
 body {
-  padding-top: 60px; // Thay đổi giá trị này tùy thuộc vào chiều cao của header
+  padding-top: 70px; // Tăng padding-top nếu cần, tương ứng với chiều cao header
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 15px; // Giảm padding cho header khi màn hình nhỏ
+  }
+
+  .nav {
+    .nav-list {
+      gap: 15px; // Giảm khoảng cách giữa các mục trong menu
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .header {
+    padding: 10px 10px; // Giảm padding cho header khi màn hình rất nhỏ
+  }
+
+  .nav {
+    .nav-list {
+      gap: 10px; // Giảm khoảng cách giữa các mục trong menu
+      flex-direction: column; // Chuyển menu thành chiều dọc
+      padding-left: 0; // Bỏ padding-left
+    }
+  }
+
+  .nav-item {
+    font-size: 16px; // Giảm kích thước font chữ cho dễ đọc trên di động
+  }
+
+  .nav-icon {
+    font-size: 18px; // Giảm kích thước icon
+  }
+
+  .nav-link {
+    font-size: 16px; // Giảm kích thước chữ của link
+    padding: 5px 0; // Thêm khoảng cách cho các item khi chúng được xếp theo chiều dọc
+  }
 }
