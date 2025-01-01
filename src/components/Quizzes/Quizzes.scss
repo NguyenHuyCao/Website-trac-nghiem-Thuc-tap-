@@ -213,3 +213,61 @@
     }
   }
 }
+.btn-public {
+  .ant-btn {
+    background-color: #52c41a; // Màu xanh lá cây
+    border-color: #52c41a;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #73d13d;
+      border-color: #73d13d;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      background-color: #389e0d;
+      border-color: #389e0d;
+      transform: scale(0.95);
+    }
+  }
+}
+
+.btn-public {
+  .ant-btn {
+    padding: 10px 20px;
+  }
+}
+
+.btn-delete {
+  .ant-btn {
+    background-color: #ff4d4f; // Màu đỏ
+    border-color: #ff4d4f;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #ff7875;
+      border-color: #ff7875;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      background-color: #d9363e;
+      border-color: #d9363e;
+      transform: scale(0.95);
+    }
+  }
+}
+
+// Đảm bảo khoảng cách giữa hai nút
+.btn-public + .btn-delete {
+  margin-left: 8px;
+}

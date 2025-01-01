@@ -17,11 +17,17 @@ const postCreateNewQuiz = (title, description, questions) => {
 };
 
 const getQuizzes = () => {
-  return axios.get("api/v1/quizz/quizzes");
+  // return axios.get("api/v1/quizz/quizzes");
+  return axios.get("api/v1/quizz/quizzes/user");
+};
+
+const deleteQuiz = (id) => {
+  // return axios.get("api/v1/quizz/quizzes");
+  return axios.delete(`api/v1/quizz/quizzes/delete/${id}`);
 };
 
 const getDataQuiz = (id) => {
   return axios.get(`api/v1/quizz/quizzes/${id}/questions`);
 };
 
-export { postCreateNewQuiz, getQuizzes, getDataQuiz };
+export { postCreateNewQuiz, getQuizzes, getDataQuiz, deleteQuiz };

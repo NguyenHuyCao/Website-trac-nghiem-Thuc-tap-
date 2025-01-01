@@ -56,11 +56,39 @@ const GamePlay = () => {
       setIsSubmitted(true);
     });
 
+    // Lắng nghe sự kiện auto-submit từ server
+    socket.on("auto-submit", () => {
+      console.log("Auto-submit event received from server");
+      handleAutoSubmit(); // Gọi hàm auto-submit
+    });
+
     return () => {
       socket.off("game-questions");
       socket.off("game-result");
+      socket.off("auto-submit");
     };
   }, [gameId]);
+
+  // Handle auto-submit
+  const handleAutoSubmit = () => {
+    if (isSubmitted) return;
+
+    console.log("Auto-submitting answers...");
+    submitAnswers(); // Gọi hàm chung để gửi dữ liệu
+  };
+
+  // Submit answers to the server
+  const submitAnswers = () => {
+    socket.emit("submit-answers", {
+      gameId,
+      answers: answersRef.current,
+      username: usernameFromUrl,
+    });
+
+    localStorage.removeItem(gameId);
+    setIsSubmitted(true);
+    setIsSubmittedModal(true);
+  };
 
   // Timer for the quiz
   useEffect(() => {

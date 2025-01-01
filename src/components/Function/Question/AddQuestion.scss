@@ -1,0 +1,143 @@
+.add-question {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+
+  &__title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    text-align: center;
+    color: #333;
+  }
+
+  &__label {
+    font-size: 18px;
+    font-weight: 500;
+    // margin-bottom: 8px;
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+  }
+
+  &__input,
+  &__answer-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: #1890ff;
+      outline: none;
+    }
+  }
+
+  &__answers {
+    margin-bottom: 10px;
+
+    &-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+
+      .ant-input {
+        width: 80%;
+        margin-right: 12px;
+      }
+
+      .ant-btn {
+        padding: 0 8px;
+        height: auto;
+        font-size: 14px;
+      }
+    }
+  }
+
+  &__add-answer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #40a9ff;
+    }
+
+    svg {
+      margin-right: 8px;
+    }
+  }
+
+  &__select {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    .ant-btn {
+      font-size: 14px;
+      padding: 8px 20px;
+      margin-left: 12px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .add-question__save-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+
+    .add-question__cancel-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+
+      &:hover {
+        background-color: #e53935;
+      }
+    }
+  }
+
+  .add-question__delete-btn {
+    margin-bottom: 8px;
+    margin-top: -3px;
+  }
+  // Style for disabled delete button
+  .add-question__delete-btn:disabled {
+    background-color: #f0f0f0;
+    color: #bbb;
+    border-color: #ddd;
+  }
+}

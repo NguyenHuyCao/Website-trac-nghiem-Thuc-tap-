@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { RiSlideshowView } from "react-icons/ri";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AuthButtons from "./AuthButtons/AuthButtons";
 import { useSelector } from "react-redux";
 import LoginCheckModal from "../CheckLogin/ModalCheckLogin/ModalCheckLogin";
 
 const Header = () => {
-  const [currentPage, setCurrentPage] = useState(0);
+  // Lấy giá trị từ localStorage, nếu không có thì mặc định là 0
+  const initialPage = Number(localStorage.getItem("currentPage")) || 0;
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const [openLoginModal, setOpenLoginModal] = useState(false);
 
@@ -19,8 +22,14 @@ const Header = () => {
       setOpenLoginModal(true); // Mở modal thông báo
     } else {
       setCurrentPage(route); // Cập nhật trạng thái trang hiện tại
+      localStorage.setItem("currentPage", route); // Lưu vào localStorage
     }
   };
+
+  useEffect(() => {
+    // Đồng bộ trạng thái trang khi component render
+    setCurrentPage(initialPage);
+  }, [initialPage]);
 
   return (
     <header className="header">

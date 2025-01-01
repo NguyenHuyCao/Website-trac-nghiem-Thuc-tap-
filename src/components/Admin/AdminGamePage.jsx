@@ -14,33 +14,29 @@ const AdminGamePage = () => {
   const [players, setPlayers] = useState([]); // Danh sách người chơi
   const [gameStatus, setGameStatus] = useState("waiting"); // Trạng thái trò chơi
   const [summary, setSummary] = useState(null); // Dữ liệu tổng kết
-  const [isFetchDisabled, setIsFetchDisabled] = useState(true); // Trạng thái kích hoạt nút
-  const [fetchTimer, setFetchTimer] = useState(10); // Thời gian đếm ngược
   const [isShowResult, setIsShowResult] = useState(false);
+  const [pauseCooldown, setPauseCooldown] = useState(10); // Thời gian chờ để nút "Tạm dừng" khả dụng
+  const [isPauseEnabled, setIsPauseEnabled] = useState(false); // Trạng thái khả dụng của nút "Tạm dừng"
 
-  console.log("summary", summary);
+  console.log("state", state);
 
   useEffect(() => {
     // Lắng nghe sự kiện "game-updated" từ server
     socket.on("game-updated", (game) => {
-      console.log("Thông tin game bên CLIENT:", game); // Log kiểm tra
       if (game.gameId === gameId) {
         setPlayers(game.players); // Cập nhật danh sách người chơi
         setGameStatus(game.status); // Cập nhật trạng thái trò chơi
-        console.log("game.duration", game.duration); // Log kiểm tra
-        setFetchTimer(game.duration);
       }
     });
 
     // Lắng nghe sự kiện "game-summary" từ server
     socket.on("game-summary", (data) => {
-      console.log("Thông tin tổng kết", data); // Log kiểm tra
-
       setSummary(data); // Lưu dữ liệu tổng kết
     });
 
     // Gửi yêu cầu lấy trạng thái game hiện tại
     socket.emit("get-game-status", gameId);
+    setPauseCooldown(state.quiz.duration);
 
     // Cleanup sự kiện khi component unmount
     return () => {
@@ -50,16 +46,17 @@ const AdminGamePage = () => {
   }, [gameId]);
 
   useEffect(() => {
-    // Đếm ngược thời gian để kích hoạt nút Fetch
-    if (isFetchDisabled && fetchTimer > 0) {
-      const interval = setInterval(() => {
-        setFetchTimer((prev) => prev - 1);
+    // Giảm dần bộ đếm thời gian chờ
+    if (pauseCooldown > 0) {
+      const timer = setInterval(() => {
+        setPauseCooldown((prev) => prev - 1);
       }, 1000);
-      return () => clearInterval(interval); // Cleanup interval khi component unmount
-    } else if (fetchTimer === 0) {
-      setIsFetchDisabled(false); // Kích hoạt nút khi hết thời gian
+
+      return () => clearInterval(timer);
+    } else {
+      setIsPauseEnabled(true); // Kích hoạt nút "Tạm dừng" khi hết thời gian chờ
     }
-  }, [fetchTimer, isFetchDisabled]);
+  }, [pauseCooldown]);
 
   const idgame = state.quizId; // ID trò chơi cố định
 
@@ -76,9 +73,7 @@ const AdminGamePage = () => {
 
   const fetchSummary = () => {
     // Gửi dữ liệu tổng kết
-    socket.emit("send-game-summary", gameId); // Sửa tên sự kiện thành "game-summary"
-    setIsFetchDisabled(true); // Vô hiệu hóa nút ngay sau khi nhấn
-    setFetchTimer(fetchTimer); // Đặt lại thời gian đếm ngược
+    socket.emit("send-game-summary", gameId);
     setIsShowResult(true);
   };
 
@@ -102,6 +97,18 @@ const AdminGamePage = () => {
         }
       : null;
 
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600); // Tính số giờ
+    const minutes = Math.floor((seconds % 3600) / 60); // Tính số phút còn lại
+    const secs = seconds % 60; // Tính số giây còn lại
+
+    // Định dạng kết quả với 2 chữ số cho mỗi đơn vị thời gian
+    const resultTime = `${hours.toString().padStart(2, "0")} : ${minutes
+      .toString()
+      .padStart(2, "0")} : ${secs.toString().padStart(2, "0")}`;
+    return resultTime;
+  };
+
   return (
     <div className="admin-game-page">
       <h1 className="quiz-title">Bài thi: {state.quiz.title}</h1>
@@ -124,18 +131,34 @@ const AdminGamePage = () => {
           Bắt đầu làm bài
         </button>
       )}
-      {gameStatus === "playing" && isShowResult === false && (
-        <button
-          className="fetch-summary-button"
-          onClick={fetchSummary}
-          disabled={isFetchDisabled}
-          style={{
-            backgroundColor: isFetchDisabled ? "#ccc" : "#28a745",
-            cursor: isFetchDisabled ? "not-allowed" : "pointer",
-          }}
-        >
-          {isFetchDisabled ? `Đợi ${fetchTimer}s` : "Kết quả"}
-        </button>
+      {gameStatus === "playing" && !isShowResult && (
+        <>
+          <button
+            className="fetch-summary-button"
+            onClick={fetchSummary}
+            disabled={!isPauseEnabled}
+            style={{
+              backgroundColor: isPauseEnabled ? "#28a745" : "#ccc",
+              cursor: isPauseEnabled ? "pointer" : "not-allowed",
+            }}
+          >
+            {isPauseEnabled
+              ? "Kết quả trò chơi"
+              : `Công bố kết quả sau ${formatTime(pauseCooldown)}s`}
+          </button>
+          {!isShowResult && (
+            <button
+              className="fetch-summary-button"
+              onClick={fetchSummary}
+              style={{
+                backgroundColor: "#ff9800",
+                cursor: "pointer",
+              }}
+            >
+              Dừng trò chơi
+            </button>
+          )}
+        </>
       )}
       {summary && Array.isArray(summary.players) && (
         <div className="final-player">

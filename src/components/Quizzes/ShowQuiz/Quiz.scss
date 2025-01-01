@@ -11,6 +11,11 @@
     border-radius: 10px;
     padding: 20px;
 
+    .edit-question {
+      margin-top: 10px;
+      padding: 15px 20px;
+    }
+
     .question-quiz {
       font-size: 18px;
       font-weight: bold;
@@ -39,6 +44,11 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
+
+    .btn-add-question {
+      margin-top: 30px;
+      padding: 15px 20px;
+    }
 
     h1 {
       // font-size: 30px;

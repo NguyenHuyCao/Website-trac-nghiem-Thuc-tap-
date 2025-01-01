@@ -7,7 +7,7 @@ const HomeQuiz = () => {
   const location = useLocation();
   const { id } = useParams();
 
-  console.log(location);
+  // console.log(location);
 
   return (
     <div className="home-quiz-container">
